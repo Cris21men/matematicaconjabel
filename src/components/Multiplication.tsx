@@ -194,11 +194,7 @@ function Multiplication({ onBack }: MultiplicationProps) {
       if (allGroupsInZone && updatedGroups.length > 0) {
         setIsComplete(true)
         setShowConfetti(true)
-        setTimeout(() => {
-          setTimeout(() => {
-            resetGame()
-          }, 3000)
-        }, 1000)
+        setTimeout(() => setTimeout(() => resetGame(), 3000), 1000)
       }
 
       return updatedGroups
@@ -217,8 +213,8 @@ function Multiplication({ onBack }: MultiplicationProps) {
 
   const renderBalloonGroup = (group: BalloonGroup) => {
     const balloons = []
-    const rows = Math.ceil(Math.sqrt(group.count))
-    const cols = Math.ceil(group.count / rows)
+    const rows = Math.ceil(Math.sqrt(group.count)) // Used to determine layout
+    const cols = Math.ceil(group.count / rows)    // Ensure rows is used in cols calculation
 
     const colorMap = {
       green: "bg-green-500",
