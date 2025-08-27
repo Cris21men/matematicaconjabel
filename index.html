@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="description" content="App para ayudar a niños con suma, resta y multiplicación usando globos interactivos" />
+  
+  <!-- PWA Meta Tags -->
+  <link rel="apple-touch-icon" href="/favicon.ico" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MathHelper" />
+  <meta name="format-detection" content="telephone=no" />
+  
+  <title>Matemáticas divertidas con Jabel - Ayuda con Matemáticas</title>
+  <style>
+    /* Prevent text selection and context menus */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Prevent scrolling */
+    html, body {
+      position: fixed;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Loading screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      z-index: 9999;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Hide loading when app is ready */
+    .app-loaded #loading {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading">
+    <div style="font-size: 4rem; margin-bottom: 20px;">🎈</div>
+    <div class="spinner"></div>
+    <h1 style="font-size: 2rem; margin: 10px 0;">MathHelper</h1>
+    <p style="font-size: 1.2rem; opacity: 0.9;">Cargando tu ayudante matemático...</p>
+  </div>
+
+  <!-- Main App -->
+  <div id="root"></div>
+  
+  <script type="module" src="/src/main.tsx"></script>
+  
+  <script>
+    // Hide loading screen when app is ready
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.body.classList.add('app-loaded');
+      }, 1000);
+    });
+    
+    // Prevent context menu
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+    
+    // Prevent default touch behaviors
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    // Prevent zoom gestures
+    var lastTouchEnd = 0;
+    document.addEventListener('touchend', function(e) {
+      var now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>
