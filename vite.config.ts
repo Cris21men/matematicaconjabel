@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico'],
       manifest: {
-        name: 'MathHelper - Ayuda con Matemáticas',
-        short_name: 'MathHelper',
+        name: 'Matemáticas divertidas con Jabel - Ayuda con Matemáticas',
+        short_name: 'Matemáticas con Jabel',
         description: 'App para ayudar a niños con suma, resta y multiplicación usando globos interactivos',
         theme_color: '#3b82f6',
         background_color: '#ffffff',
@@ -29,5 +29,20 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000
+  },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // Suppress certain warnings
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+        warn(warning)
+      }
+    }
   }
+})
+  server: {
+    host: true,
+    port: 3000
+  }
+
 })
