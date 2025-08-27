@@ -133,20 +133,18 @@ function Multiplication({ onBack }: MultiplicationProps) {
     if (!group || group.isInDropZone) return
 
     const touch = e.touches[0]
-    if (!touch) return
-
     const offsetX = touch.clientX - group.x
     const offsetY = touch.clientY - group.y
 
     setBalloonGroups((prev) => prev.map((group) => (group.id === groupId ? { ...group, isDragging: true } : group)))
 
     const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches[0]
-      if (touch) {
+      const newTouch = e.touches[0]
+      if (newTouch) {
         setBalloonGroups((prev) =>
           prev.map((group) =>
             group.id === groupId && group.isDragging
-              ? { ...group, x: touch.clientX - offsetX, y: touch.clientY - offsetY }
+              ? { ...group, x: newTouch.clientX - offsetX, y: newTouch.clientY - offsetY }
               : group,
           ),
         )
@@ -154,9 +152,9 @@ function Multiplication({ onBack }: MultiplicationProps) {
     }
 
     const handleTouchEnd = (e: TouchEvent) => {
-      const touch = e.changedTouches[0]
-      if (touch) {
-        handleGroupDrop(groupId, touch.clientX, touch.clientY)
+      const newTouch = e.changedTouches[0]
+      if (newTouch) {
+        handleGroupDrop(groupId, newTouch.clientX, newTouch.clientY)
       }
       document.removeEventListener("touchmove", handleTouchMove)
       document.removeEventListener("touchend", handleTouchEnd)
@@ -174,10 +172,9 @@ function Multiplication({ onBack }: MultiplicationProps) {
       x >= dropZoneRect.left && x <= dropZoneRect.right && y >= dropZoneRect.top && y <= dropZoneRect.bottom
 
     if (isInDropZone) {
-      // Encontrar el grupo y sumar SOLO SI no estaba ya en la zona
-      const group = balloonGroups.find(g => g.id === groupId)
+      const group = balloonGroups.find((g) => g.id === groupId)
       if (group && !group.isInDropZone) {
-        setTotalSum(prev => prev + group.count)
+        setTotalSum((prev) => prev + group.count)
       }
     }
 
@@ -219,7 +216,6 @@ function Multiplication({ onBack }: MultiplicationProps) {
   }
 
   const renderBalloonGroup = (group: BalloonGroup) => {
-    // NO retornar null, siempre mostrar el grupo
     const balloons = []
     const rows = Math.ceil(Math.sqrt(group.count))
     const cols = Math.ceil(group.count / rows)
@@ -245,13 +241,13 @@ function Multiplication({ onBack }: MultiplicationProps) {
     for (let i = 0; i < group.count; i++) {
       const row = Math.floor(i / cols)
       const col = i % cols
-      const balloonX = col * 22 + 6 // Espaciado más compacto
-      const balloonY = row * 22 + 6 // Espaciado más compacto
+      const balloonX = col * 22 + 6
+      const balloonY = row * 22 + 6
 
       balloons.push(
         <div
           key={i}
-          className={`absolute w-5 h-6 rounded-full ${colorMap[group.color]} border-2 border-white/40 shadow-md`} // Globos más pequeños
+          className={`absolute w-5 h-6 rounded-full ${colorMap[group.color]} border-2 border-white/40 shadow-md`}
           style={{
             left: balloonX,
             top: balloonY,
@@ -271,8 +267,8 @@ function Multiplication({ onBack }: MultiplicationProps) {
         style={{
           left: group.x,
           top: group.y,
-          width: "120px", // Contenedor más pequeño
-          height: "110px", // Contenedor más pequeño
+          width: "120px",
+          height: "110px",
         }}
         onMouseDown={(e) => !group.isInDropZone && handleGroupMouseDown(group.id, e)}
         onTouchStart={(e) => !group.isInDropZone && handleGroupTouchStart(group.id, e)}
@@ -280,7 +276,7 @@ function Multiplication({ onBack }: MultiplicationProps) {
         <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-2 border-2 border-white/20">{balloons}</div>
         <div className="absolute bottom-[-6px] left-0 right-0 text-center">
           <div
-            className={`text-xl font-bold ${textColorMap[group.color]} drop-shadow-lg bg-white/90 rounded-lg px-2 py-1 mx-auto inline-block`} // Texto más pequeño
+            className={`text-xl font-bold ${textColorMap[group.color]} drop-shadow-lg bg-white/90 rounded-lg px-2 py-1 mx-auto inline-block`}
           >
             {group.count}
           </div>
